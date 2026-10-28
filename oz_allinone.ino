@@ -1,13 +1,12 @@
 #include "config.h"
 #include "secrets.h"
 #include "timer.h"
+#include "ota.h"
 
 #include <MD_Parola.h>
 
 // #include <Arduino.h>
 #include <PubSubClient.h>
-
-#include <ArduinoOTA.h>
 
 #define ZONE_CLOCK   0
 #define ZONE_HOME_ID 1
@@ -90,37 +89,14 @@ void setup()
   display.displayZoneText(ZONE_CLOCK,  szMesgClock, PA_CENTER, 0, 0, PA_NO_EFFECT, PA_NO_EFFECT);
   display.displayZoneText(ZONE_DATE,  szMesgDate, PA_CENTER, 0, 0, PA_NO_EFFECT, PA_NO_EFFECT);
 
-  ArduinoOTA.setHostname(DEVICE_ID);
-
-  // Optional: require a password for OTA uploads
-  ArduinoOTA.setPassword(OTA_PASSWORD);
-
-  ArduinoOTA
-    .onStart([]() {
-      Serial.println("OTA update started");
-    })
-    .onEnd([]() {
-      Serial.println("\nOTA update finished");
-    })
-    .onProgress([](unsigned int progress,
-                    unsigned int total) {
-      Serial.printf("Progress: %u%%\r",
-                    (progress * 100) / total);
-    })
-    .onError([](ota_error_t error) {
-      Serial.printf("OTA error: %u\n", error);
-    });
-
-  ArduinoOTA.begin();
-
-  Serial.println("OTA ready");
+  ota_init();
 }
 
 void loop()
 {
   connect_to_wifis(wifi_networks, ARRAY_SIZE(wifi_networks));
 
-  ArduinoOTA.handle();
+  ota_handle();
 
   if (!client.connected()) {
     reconnect_to_mqtt(&client);
