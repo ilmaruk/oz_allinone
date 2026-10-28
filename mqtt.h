@@ -4,13 +4,15 @@
 #include <ArduinoJson.h>
 
 #include <timer.h>
+#include <config.h>
+#include <secrets.h>
 
 void reconnect_to_mqtt(PubSubClient* client) {
   // Loop until we're reconnected
   while (!client->connected()) {
     Serial.print("Attempting MQTT connection...");
     // Attempt to connect
-    if (client->connect(MQTT_CLIENT_NAME)) {
+    if (client->connect(DEVICE_ID)) {
       Serial.println("connected");
       // Subscribe
       client->subscribe(MQTT_TOPIC, 1);

@@ -23,7 +23,8 @@ bool connect_to_wifi(wifi_credentials creds) {
       Serial.println(WiFi.localIP());
       return true;
   }
-  delay(1000);
+  WiFi.disconnect(true);
+  delay(100);
   return false;
 }
 

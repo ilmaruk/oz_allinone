@@ -7,6 +7,8 @@
 // #include <Arduino.h>
 #include <PubSubClient.h>
 
+#include <ArduinoOTA.h>
+
 #define ZONE_CLOCK   0
 #define ZONE_HOME_ID 1
 #define ZONE_SCORE   2
@@ -58,6 +60,7 @@ void setup()
 
   // WiFi setup
   WiFi.mode(WIFI_STA);
+  connect_to_wifis(wifi_networks, ARRAY_SIZE(wifi_networks));
 
   // MQTT setup
   client.setServer(MQTT_SERVER, 1883);
@@ -85,18 +88,39 @@ void setup()
   display.setIntensity(ZONE_DATE, 0);
 
   display.displayZoneText(ZONE_CLOCK,  szMesgClock, PA_CENTER, 0, 0, PA_NO_EFFECT, PA_NO_EFFECT);
-  // display.displayZoneText(ZONE_HOME_ID, szMesgScore[ZONE_HOME_ID-1], PA_LEFT, 0, 0,
-  //                         PA_NO_EFFECT, PA_NO_EFFECT);
-  // display.displayZoneText(ZONE_SCORE, szMesgScore[ZONE_SCORE-1], PA_CENTER, 0, 0,
-  //                         PA_NO_EFFECT, PA_NO_EFFECT);
-  // display.displayZoneText(ZONE_AWAY_ID, szMesgScore[ZONE_AWAY_ID-1], PA_RIGHT, 0, 0,
-  //                         PA_NO_EFFECT, PA_NO_EFFECT);
   display.displayZoneText(ZONE_DATE,  szMesgDate, PA_CENTER, 0, 0, PA_NO_EFFECT, PA_NO_EFFECT);
+
+  ArduinoOTA.setHostname(DEVICE_ID);
+
+  // Optional: require a password for OTA uploads
+  ArduinoOTA.setPassword(OTA_PASSWORD);
+
+  ArduinoOTA
+    .onStart([]() {
+      Serial.println("OTA update started");
+    })
+    .onEnd([]() {
+      Serial.println("\nOTA update finished");
+    })
+    .onProgress([](unsigned int progress,
+                    unsigned int total) {
+      Serial.printf("Progress: %u%%\r",
+                    (progress * 100) / total);
+    })
+    .onError([](ota_error_t error) {
+      Serial.printf("OTA error: %u\n", error);
+    });
+
+  ArduinoOTA.begin();
+
+  Serial.println("OTA ready");
 }
 
 void loop()
 {
   connect_to_wifis(wifi_networks, ARRAY_SIZE(wifi_networks));
+
+  ArduinoOTA.handle();
 
   if (!client.connected()) {
     reconnect_to_mqtt(&client);
