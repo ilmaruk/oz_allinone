@@ -24,6 +24,7 @@ char szMesgScore[3][8] = {"-", "0-0", "-"};
 #include "mqtt.h"
 #include "clock.h"
 #include "clock_font.h"
+#include "crests_font.h"
 
 WiFiClient espClient;
 PubSubClient client(espClient);
@@ -75,9 +76,9 @@ void setup()
   display.setZone(ZONE_DATE, 4, 7);
 
   display.setFont(ZONE_CLOCK, oz_score);
-  display.setFont(ZONE_HOME_ID, font_w3);
+  display.setFont(ZONE_HOME_ID, font_crests);
   display.setFont(ZONE_SCORE, oz_score);
-  display.setFont(ZONE_AWAY_ID, font_w3);
+  display.setFont(ZONE_AWAY_ID, font_crests);
   display.setFont(ZONE_DATE, font_w3);
 
   display.setIntensity(ZONE_CLOCK, 0);
