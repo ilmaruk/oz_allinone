@@ -1,11 +1,13 @@
 #ifndef _MQTT_H
 #define _MQTT_H
 
+#include <PubSubClient.h>
 #include <ArduinoJson.h>
 
 #include <timer.h>
 #include <config.h>
 #include <secrets.h>
+#include <display.h>
 
 void reconnect_to_mqtt(PubSubClient* client) {
   // Loop until we're reconnected
@@ -24,6 +26,8 @@ void reconnect_to_mqtt(PubSubClient* client) {
     }
   }
 }
+
+bool info_has_changed = false;
 
 void handle_mqtt_message(char* topic, byte* message, unsigned int length) {
   Serial.print("Message arrived on topic: ");
@@ -47,6 +51,9 @@ void handle_mqtt_message(char* topic, byte* message, unsigned int length) {
       timer_stop();
     } else if (strcmp(cmd, "RESUME") == 0) {
       timer_start();
+    } else if (strcmp(cmd, "INTENSITY") == 0) {
+      size_t intensity = doc["intensity"];
+      display_set_intensity(intensity);
     } else {
       Serial.println("Command unknown");
     }
