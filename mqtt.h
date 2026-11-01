@@ -65,6 +65,11 @@ void handle_mqtt_message(char* topic, byte* message, unsigned int length) {
     size_t away_score = doc["away_score"];
 
     if (home_score > _home_score || away_score > _away_score) {
+      if (home_score > _home_score) {
+        strncpy(szMesgGoalId, szMesgScore[0], 2);
+      } else {
+        strncpy(szMesgGoalId, szMesgScore[2], 2);
+      }
       board_activate_goal_carousel();
     }
     _home_score = home_score;
