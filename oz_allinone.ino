@@ -9,6 +9,7 @@
 #include "oz_wifi.h"
 #include "mqtt.h"
 #include "clock.h"
+#include "board.h"
 
 WiFiClient espClient;
 PubSubClient client(espClient);

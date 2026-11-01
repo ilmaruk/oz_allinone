@@ -8,6 +8,7 @@
 #include <config.h>
 #include <secrets.h>
 #include <display.h>
+#include <board.h>
 
 void reconnect_to_mqtt(PubSubClient* client) {
   // Loop until we're reconnected
@@ -30,6 +31,8 @@ void reconnect_to_mqtt(PubSubClient* client) {
 bool info_has_changed = false;
 
 void handle_mqtt_message(char* topic, byte* message, unsigned int length) {
+  static size_t _home_score, _away_score;
+
   Serial.print("Message arrived on topic: ");
   Serial.println(topic);
 
@@ -68,6 +71,12 @@ void handle_mqtt_message(char* topic, byte* message, unsigned int length) {
     strncpy(szMesgScore[2], away_id, 2);
 
     info_has_changed = true;
+
+    if (home_score > _home_score || away_score > _away_score) {
+      board_activate_goal_carousel();
+    }
+    _home_score = home_score;
+    _away_score = away_score;
   }
 }
 
