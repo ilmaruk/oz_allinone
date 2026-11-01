@@ -69,7 +69,7 @@ void loop()
   }
   client.loop();
 
-  display_update(&info_has_changed);
+  display_update();
 
   // Temporarily disable auto-resetting of time, so that the final score remains displayed indefinitely
   // timer_reset();

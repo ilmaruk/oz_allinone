@@ -58,7 +58,7 @@ void display_set_intensity() {
   }
 }
 
-void display_update(bool* info_has_changed) {
+void display_update() {
   display_set_intensity();
 
   if (!display.displayAnimate()) {

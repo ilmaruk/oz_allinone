@@ -28,8 +28,6 @@ void reconnect_to_mqtt(PubSubClient* client) {
   }
 }
 
-bool info_has_changed = false;
-
 void handle_mqtt_message(char* topic, byte* message, unsigned int length) {
   static size_t _home_score, _away_score;
 
@@ -65,18 +63,16 @@ void handle_mqtt_message(char* topic, byte* message, unsigned int length) {
     const char* away_id = doc["away_id"];
     size_t home_score = doc["home_score"];
     size_t away_score = doc["away_score"];
-    
-    strncpy(szMesgScore[0], home_id, 2);
-    snprintf(szMesgScore[1], sizeof(szMesgScore[1]), "%d-%d", home_score, away_score);
-    strncpy(szMesgScore[2], away_id, 2);
-
-    info_has_changed = true;
 
     if (home_score > _home_score || away_score > _away_score) {
       board_activate_goal_carousel();
     }
     _home_score = home_score;
     _away_score = away_score;
+    
+    strncpy(szMesgScore[0], home_id, 2);
+    snprintf(szMesgScore[1], sizeof(szMesgScore[1]), "%d-%d", home_score, away_score);
+    strncpy(szMesgScore[2], away_id, 2);
   }
 }
 
