@@ -1,8 +1,10 @@
 #ifndef _CONFIG_H
 #define _CONFIG_H
 
+#include <WiFi.h>
+
 // Device ID
-const char* DEVICE_ID = "Max7219x8";
+char DEVICE_ID[50];
 
 // Max7219 display
 #define HARDWARE_TYPE MD_MAX72XX::FC16_HW

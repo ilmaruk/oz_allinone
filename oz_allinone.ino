@@ -45,6 +45,10 @@ void setup()
   WiFi.mode(WIFI_STA);
   connect_to_wifis(wifi_networks, ARRAY_SIZE(wifi_networks));
 
+  sprintf(DEVICE_ID, "oz-board-%s", WiFi.macAddress().c_str());
+  Serial.print("DEVICE_ID: ");
+  Serial.println(DEVICE_ID);
+
   // MQTT setup
   client.setServer(MQTT_SERVER, 1883);
   client.setCallback(handle_mqtt_message);
