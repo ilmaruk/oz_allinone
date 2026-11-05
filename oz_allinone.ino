@@ -2,6 +2,7 @@
 #include "secrets.h"
 #include "timer.h"
 #include "ota.h"
+#include "ota_web.h"
 #include "display.h"
 
 // #include <Arduino.h>
@@ -49,6 +50,8 @@ void setup()
   Serial.print("DEVICE_ID: ");
   Serial.println(DEVICE_ID);
 
+  OTAWeb::begin();
+
   // MQTT setup
   client.setServer(MQTT_SERVER, 1883);
   client.setCallback(handle_mqtt_message);
@@ -67,6 +70,7 @@ void loop()
   connect_to_wifis(wifi_networks, ARRAY_SIZE(wifi_networks));
 
   ota_handle();
+  OTAWeb::handle();
 
   if (!client.connected()) {
     reconnect_to_mqtt(&client);
