@@ -1,14 +1,12 @@
 #ifndef _BOARD_H
 #define _BOARD_H
 
+#include "config.h"
 #include "timer.h"
 
 #define BOARD_CLOCK 0
 #define BOARD_TIMER 1
 #define BOARD_GOAL  2
-
-#define GOAL_CAROUSEL_ITERATIONS 6
-#define GOAL_CAROUSEL_LENGTH 1500
 
 size_t goal_carousel_counter = 0;
 

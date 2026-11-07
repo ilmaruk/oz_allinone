@@ -236,7 +236,7 @@ namespace OTAWeb {
             return;
         }
 
-        MDNS.begin(OTA_HOSTNAME);
+        MDNS.begin(DEVICE_ID);
 
         server.collectHeaders(headers, 2);
 
@@ -263,7 +263,7 @@ namespace OTAWeb {
 
         Serial.printf(
             "OTA web server ready: http://%s.local/update\n",
-            OTA_HOSTNAME
+            DEVICE_ID
         );
 
         Serial.printf(

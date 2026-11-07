@@ -1,7 +1,6 @@
 #include "config.h"
 #include "secrets.h"
 #include "timer.h"
-#include "ota.h"
 #include "ota_web.h"
 #include "display.h"
 
@@ -45,10 +44,14 @@ void setup()
   // WiFi setup
   WiFi.mode(WIFI_STA);
   connect_to_wifis(wifi_networks, ARRAY_SIZE(wifi_networks));
+  Serial.printf("Device MAC Address: %s\n", WiFi.macAddress().c_str());
 
-  sprintf(DEVICE_ID, "oz-board-%s", WiFi.macAddress().c_str());
-  Serial.print("DEVICE_ID: ");
-  Serial.println(DEVICE_ID);
+  if (map_contains(&mac_to_name_map, WiFi.macAddress().c_str())) {
+    strcpy(DEVICE_ID, map_get(&mac_to_name_map, WiFi.macAddress().c_str()));
+  } else {
+    strcpy(DEVICE_ID, "oz-board-unknown");
+  }
+  Serial.printf("DEVICE_ID: %s\n", DEVICE_ID);
 
   OTAWeb::begin();
 
@@ -61,15 +64,12 @@ void setup()
 
   display.displayZoneText(ZONE_CLOCK,  szMesgClock, PA_CENTER, 0, 0, PA_NO_EFFECT, PA_NO_EFFECT);
   display.displayZoneText(ZONE_DATE,  szMesgDate, PA_CENTER, 0, 0, PA_NO_EFFECT, PA_NO_EFFECT);
-
-  ota_init();
 }
 
 void loop()
 {
   connect_to_wifis(wifi_networks, ARRAY_SIZE(wifi_networks));
 
-  ota_handle();
   OTAWeb::handle();
 
   if (!client.connected()) {
